@@ -1,103 +1,154 @@
-# 🛡️ Alerta Segura — Guía de Configuración Local
+# 🛡️ Alerta Segura - Security Alert Application
 
-## ✅ Requisitos previos
+> A comprehensive mobile security application designed to detect and prevent cyber threats in real-time. Built for educational purposes and cybersecurity awareness.
 
-| Herramienta | Versión mínima | Descarga |
-|---|---|---|
-| Python | 3.8+ | python.org |
-| Node.js | 16+ | nodejs.org |
-| MongoDB | 6+ | mongodb.com/try/download/community |
-| Expo Go (celular) | Última | App Store / Play Store |
+![License](https://img.shields.io/badge/license-MIT-green)
+![Python](https://img.shields.io/badge/python-3.12+-blue)
+![Node.js](https://img.shields.io/badge/node.js-18+-green)
+![React Native](https://img.shields.io/badge/react--native-0.76+-blue)
+![Status](https://img.shields.io/badge/status-Active-brightgreen)
 
----
+## 📱 Features
 
-## 🗂️ Estructura del proyecto
+### 🔍 **Message Analysis**
+- Detects phishing attempts and malicious text patterns
+- Real-time classification: Safe ✅ / Suspicious ⚠️ / Dangerous 🚨
+- AI-powered threat detection using Anthropic Claude
 
-```
-alerta-segura/
-├── backend/
-│   ├── server.py
-│   ├── requirements.txt
-│   └── .env
-└── frontend/
-    ├── app/
-    │   ├── _layout.tsx
-    │   ├── index.tsx
-    │   ├── analyze-message.tsx
-    │   ├── analyze-url.tsx
-    │   ├── analyze-image.tsx
-    │   ├── training.tsx
-    │   └── history.tsx
-    ├── package.json
-    ├── app.json
-    └── .env
-```
+### 🔗 **URL Security Verification**
+- Validates URLs before opening
+- VirusTotal integration for threat intelligence
+- Prevents drive-by downloads and malicious redirects
+
+### 🖼️ **Image Analysis**
+- OCR-based fraud detection
+- Screenshot analysis for scam patterns
+- Visual similarity matching with known threats
+
+### 📚 **Interactive Training Module**
+- Real-world phishing/scam examples
+- Educational scenarios with guided learning
+- Security best practices documentation
 
 ---
 
-## 🚀 Paso 1: Configurar el Backend
+## 🏗️ Quick Architecture
 
-Abre una terminal y navega a la carpeta backend:
+```
+Mobile App (React Native) ←→ FastAPI Backend ←→ MongoDB + AI APIs
+```
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+```bash
+Python 3.12+    Node.js 18+    MongoDB 6+    Git
+```
+
+### Installation (5 minutes)
 
 ```bash
-cd alerta-segura/backend
+# Clone & Setup
+git clone https://github.com/AndreGarate/security-alert.git
+cd security-alert/alerta-segura
 
-# 1. Crear entorno virtual
+# Backend
+cd backend
 python -m venv venv
-
-# 2. Activar el entorno virtual
-# En Windows:
-venv\Scripts\activate
-# En Mac/Linux:
-source venv/bin/activate
-
-# 3. Instalar dependencias normales
+venv\Scripts\activate  # Windows or source venv/bin/activate
 pip install -r requirements.txt
 
-# 4. Instalar la librería de Emergent (índice especial)
-pip install emergentintegrations --extra-index-url https://d33sy5i8bnduwe.cloudfront.net/simple/
+# Frontend
+cd ../frontend
+npm install
 
-# 5. Iniciar el servidor
+# Configure .env files with your API keys
+```
+
+### Run Application
+
+**Terminal 1: Backend**
+```bash
+cd backend
+source venv/bin/activate
 uvicorn server:app --host 0.0.0.0 --port 8001 --reload
 ```
 
-✅ Verifica que funciona abriendo en tu navegador: http://localhost:8001/api/health
-
----
-
-## 📱 Paso 2: Configurar el Frontend
-
-Abre UNA NUEVA terminal (deja el backend corriendo):
-
+**Terminal 2: MongoDB**
 ```bash
-cd alerta-segura/frontend
+mongod --dbpath <your-data-path>
+# or: docker compose up -d
+```
 
-# 1. Instalar dependencias
-npm install
-
-# 2. Iniciar Expo
+**Terminal 3: Frontend**
+```bash
+cd frontend
 npx expo start
 ```
 
+**Terminal 4: Mobile**
+- Install Expo Go app
+- Scan QR code from Terminal 3
+- Done! 📱
+
 ---
 
-## 📲 Paso 3: Ver la app en tu celular
+## 📚 API Documentation
 
-1. Instala **Expo Go** en tu celular desde la App Store o Play Store
-2. Asegúrate de que tu celular y tu PC estén en la **misma red WiFi**
-3. Escanea el QR que aparece en la terminal con la cámara (iOS) o con Expo Go (Android)
+| Endpoint | Method | Purpose |
+|----------|--------|---------|
+| `/api/health` | GET | Server status |
+| `/api/analyze-message` | POST | Threat analysis for text |
+| `/api/analyze-url` | POST | URL safety verification |
+| `/api/analyze-image` | POST | Image fraud detection |
 
-### ⚠️ Si usas dispositivo físico (no emulador)
+---
 
-Necesitas cambiar la IP en `frontend/.env`:
+## 🔧 Tech Stack
 
-```env
-# Reemplaza 192.168.1.XXX con la IP de tu PC en la red WiFi
-EXPO_PUBLIC_BACKEND_URL=http://192.168.1.XXX:8001
+**Backend**: FastAPI, Uvicorn, MongoDB, Motor, Pydantic  
+**Frontend**: React Native, Expo, TypeScript, Axios  
+**AI**: Anthropic Claude, VirusTotal API  
+**DevOps**: Docker, Docker Compose
+
+---
+
+## 📁 Project Structure
+
+```
+alerta-segura/
+├── backend/              # FastAPI server
+│   ├── server.py        # Main application
+│   └── requirements.txt  # Dependencies
+├── frontend/            # React Native mobile
+│   ├── app/            # Screens & components
+│   ├── lib/            # API & config
+│   └── package.json
+├── scripts/            # Setup utilities
+├── docker-compose.yml  # MongoDB container
+└── README.md          # This file
 ```
 
-Para saber tu IP:
-- Windows: ejecuta `ipconfig` en cmd → busca "Dirección IPv4"
+---
+
+## 🎓 Learn More
+
+See [README-PORTFOLIO.md](README-PORTFOLIO.md) for detailed feature documentation and development guide.
+
+---
+
+## 📄 License
+
+MIT - Free for educational and commercial use
+
+---
+
+## 👤 Author
+
+**André Garate** | Cybersecurity Enthusiast & Full-Stack Developer  
+🔗 GitHub: [@AndreGarate](https://github.com/AndreGarate)
 - Mac/Linux: ejecuta `ifconfig` → busca la IP de tu red
 
 ---
