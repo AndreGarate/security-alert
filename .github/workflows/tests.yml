@@ -1,0 +1,91 @@
+name: Tests & Code Quality
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  backend-tests:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+    
+    - name: Install dependencies
+      run: |
+        cd backend
+        python -m venv venv
+        source venv/bin/activate
+        pip install -r requirements.txt
+        pip install pytest flake8
+    
+    - name: Lint with flake8
+      run: |
+        cd backend
+        source venv/bin/activate
+        # Stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # Exit-zero treats all errors as warnings
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=100 --statistics
+    
+    - name: Run backend tests
+      run: |
+        cd backend
+        source venv/bin/activate
+        # pytest --cov (uncomment when tests are ready)
+        echo "Backend tests would run here"
+
+  frontend-tests:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+    
+    - name: Install dependencies
+      run: |
+        cd frontend
+        npm install
+    
+    - name: TypeScript check
+      run: |
+        cd frontend
+        npx tsc --noEmit
+    
+    - name: Run linter
+      run: |
+        cd frontend
+        # npm run lint (uncomment when eslint is configured)
+        echo "Frontend linting would run here"
+
+  code-quality:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Check for secrets
+      uses: trufflesecurity/trufflehog@main
+      with:
+        path: ./
+        base: ${{ github.event.repository.default_branch }}
+        head: HEAD
+    
+    - name: Verify .env files are not committed
+      run: |
+        if grep -r ".env" --exclude-dir=.git --exclude-dir=node_modules --exclude-dir=venv .; then
+          echo "❌ ERROR: .env files should not be committed!"
+          exit 1
+        fi
+        echo "✅ No .env files found in repository"
